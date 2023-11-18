@@ -1,6 +1,6 @@
 # nutriscan
 
-flutter project
+This is application is creataed with a intention to build something which can scan the ingredients of the food products.
 
 ## Getting Started
 
