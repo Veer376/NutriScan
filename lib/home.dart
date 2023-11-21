@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              (textScanning)?Container(
+              (textScanning)? SizedBox(
                 height: 200,
                 width: double.infinity,
                 child: SingleChildScrollView(child: Text(scannedText)),
@@ -79,26 +79,40 @@ class _HomePageState extends State<HomePage> {
               const Icon(Icons.qr_code_scanner_rounded, size: 200,
                 color: Colors.orangeAccent,),
               // const SizedBox(height: 20,),
-              TextButton(
-                onPressed: () {
-                  getImage(ImageSource.gallery);
-                },
-                onLongPress: (){
-                  getImage(ImageSource.camera);
-                },
-                style: TextButton.styleFrom(
-                    backgroundColor: Colors.orangeAccent,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18))
-                ),
-                child: const Text("Scan", style: TextStyle(color: Colors.white,
-                    fontFamily: 'Quicksand',
-                    fontWeight: FontWeight.w900,
-                    fontSize: 22),),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      getImage(ImageSource.camera);
 
+                    },
+                    style: TextButton.styleFrom(
+                        backgroundColor: Colors.orangeAccent,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18))
+                    ),
+                    child: const Text("Scan", style: TextStyle(color: Colors.white,
+                        fontFamily: 'Quicksand',
+                        fontWeight: FontWeight.w900,
+                        fontSize: 22),),
 
-              ),
+                  ),
+                  const SizedBox(width: 10,),
+                  IconButton(
+                    onPressed: (){
+                      getImage(ImageSource.gallery);
 
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+                    ),
+                    color: Colors.orangeAccent,
+                    icon: const Icon(Icons.image),
+                  ),
+                ],
+              )
             ],
           ),
         ),
