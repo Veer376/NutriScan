@@ -3,8 +3,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'home.dart';
 
 void main() async{
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
   runApp(const MaterialApp(
     home: OnBoarding(),
     debugShowCheckedModeBanner: false,
@@ -19,8 +17,8 @@ class OnBoarding extends StatefulWidget {
 }
 
 class _OnBoardingState extends State<OnBoarding> {
-  final pagecontrol = PageController();
-  bool islastpage = false;
+  final pageControl = PageController();
+  bool isLastPage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +30,10 @@ class _OnBoardingState extends State<OnBoarding> {
         body: PageView(
           onPageChanged: (index) {
             setState(() {
-              islastpage = index == 2;
+              isLastPage = index == 2;
             });
           },
-          controller: pagecontrol,
+          controller: pageControl,
           children: [
             Container(
               color: const Color(0xFFFFF7E0),
@@ -104,7 +102,7 @@ class _OnBoardingState extends State<OnBoarding> {
             ),
           ],
         ),
-        bottomSheet: islastpage?
+        bottomSheet: isLastPage?
              Container(
                width: 450,
                color: const Color(0xFFFFF7E0),
@@ -136,7 +134,7 @@ class _OnBoardingState extends State<OnBoarding> {
                 children: [
                 TextButton(
                   onPressed: () =>
-                    pagecontrol.animateToPage(2, duration: const Duration(milliseconds: 500), curve: Curves.fastOutSlowIn),
+                    pageControl.animateToPage(2, duration: const Duration(milliseconds: 500), curve: Curves.fastOutSlowIn),
                   child: const Text(
                   "Skip",
                   style: TextStyle(
@@ -148,7 +146,7 @@ class _OnBoardingState extends State<OnBoarding> {
                 ),
               ),
                  SmoothPageIndicator(
-                controller: pagecontrol,
+                controller: pageControl,
                 count: 3,
                 effect: const WormEffect(
                   dotColor: Color(0xFFFAE2A3),
@@ -157,7 +155,7 @@ class _OnBoardingState extends State<OnBoarding> {
                   type: WormType.normal,
                   activeDotColor: Color(0xFFFFBB46),
                 ),
-                onDotClicked: (page) => pagecontrol.jumpToPage(page),
+                onDotClicked: (page) => pageControl.jumpToPage(page),
               ),
                  Container(
                    padding: const EdgeInsets.all(10),
@@ -178,7 +176,7 @@ class _OnBoardingState extends State<OnBoarding> {
                         ),
                       ),
                   ),
-                    onPressed: () => pagecontrol.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.fastOutSlowIn),
+                    onPressed: () => pageControl.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.fastOutSlowIn),
                      icon: const Icon(Icons.arrow_forward_ios),
                 ),
               ),
