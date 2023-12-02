@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nutriscan/home.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'home.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+void main() async{
   runApp(const MaterialApp(
     home: OnBoarding(),
     debugShowCheckedModeBanner: false,
@@ -29,8 +26,6 @@ class _OnBoardingState extends State<OnBoarding> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: const Color(0xFFFFF7E0),
-          primary: false,
-
         ),
         body: PageView(
           onPageChanged: (index) {
@@ -173,7 +168,7 @@ class _OnBoardingState extends State<OnBoarding> {
                       color: Colors.white,
                       splashColor: Colors.black,
                       style: ButtonStyle(
-                      iconColor: const MaterialStatePropertyAll<Color>(Colors.black),
+                      iconColor: const MaterialStatePropertyAll<Color>(Colors.white),
                       backgroundColor: const MaterialStatePropertyAll<Color>(Color(0xFFFFBB46)),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         RoundedRectangleBorder(
