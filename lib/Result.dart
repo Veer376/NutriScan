@@ -16,37 +16,41 @@ class _ResultState extends State<Result> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: const Color(0xFFFFF7E0),
-       body: //loading?const Center(
-      //   child: CircularProgressIndicator(),
-      // ):
-      //  Flex(
-      //   direction: Axis.vertical, // or Axis.horizontal, depending on your layout
-      //   children: [
-      //     Expanded(
-      //       flex: 1,
-      //       child: FirebaseAnimatedList(
-      //         query: reference,
-      //         itemBuilder: (
-      //             context,snapshot,animation,index) {
-      //           final value=snapshot.child('Ingredients').value.toString().toLowerCase();
-      //
-      //           return ingredients.contains(value) ?ListTile(
-      //
-      //             leading: Text(index.toString()),
-      //             title: Text(snapshot.child('Ingredients').value.toString()),
-      //             subtitle: Text(snapshot.child('Source Type').value.toString()),
-      //           ):const Text("",style: TextStyle(fontSize: 0),);
-      //         },),
-      //     ),
-      //     // Other children of the Flex widget
-      //   ],
-      // )
-      Column(
+       appBar: AppBar(
+         title: const Text("Scan Again",style: TextStyle(fontFamily: "Quicksand",fontWeight: FontWeight.bold),),
+         scrolledUnderElevation: 0,
+         // centerTitle: true,
+         elevation: 0,
+         backgroundColor: Colors.transparent,
+       ),
+       body: Column(
         children: [
           const SizedBox(height: 50,),
-          Image.asset("assets/foodImage.png",width: 430,height: 300,)
+          Expanded(
+            child: FirebaseAnimatedList(
+              query: reference,
+              itemBuilder: (
+                  context,snapshot,animation,index) {
+                final value=snapshot.child('Ingredients').value.toString().toLowerCase();
+
+                return ingredients.contains(value) ?ListTile(
+
+                  leading: Text(index.toString()),
+                  title: Text(snapshot.child('Ingredients').value.toString()),
+                  subtitle: Column(
+                    children: [
+                      Text(snapshot.child('Source Type').value.toString(),style: const TextStyle(color: Colors.orangeAccent),),
+                      Text("Healthy: ${snapshot.child('Healthy').value.toString()}",style: const TextStyle(color: Colors.redAccent),),
+                      Text("Unhealhty: ${snapshot.child('Unhealthy').value.toString()}",style: const TextStyle(color: Colors.green),)
+                    ],
+                  ),
+                ):const Text("",style: TextStyle(fontSize: 0),);
+              },),
+          )
+
         ],
       )
     );
