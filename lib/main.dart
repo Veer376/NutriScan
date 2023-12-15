@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:nutriscan/home.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'home.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() async{
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MaterialApp(
     home: OnBoarding(),
     debugShowCheckedModeBanner: false,
@@ -26,6 +29,8 @@ class _OnBoardingState extends State<OnBoarding> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: const Color(0xFFFFF7E0),
+          primary: false,
+
         ),
         body: PageView(
           onPageChanged: (index) {
@@ -90,11 +95,11 @@ class _OnBoardingState extends State<OnBoarding> {
                          FontWeight.w900),),
                    Image.asset('assets/pageview3.png'),
                    Container(
-                     padding: EdgeInsets.only(left: 120),
+                     padding: const EdgeInsets.only(left: 120),
 
                      alignment: const Alignment(0,0.20),
                      width: 350,
-                       child: Text("Your Drink is only 30 percent healtheir if consumed less than a month and 20 percent healthier further.",style: TextStyle(fontFamily: 'Quicksand',fontSize: 20,fontWeight: FontWeight.w600),))
+                       child: const Text("Your Drink is only 30 percent healtheir if consumed less than a month and 20 percent healthier further.",style: TextStyle(fontFamily: 'Quicksand',fontSize: 20,fontWeight: FontWeight.w600),))
 
                  ],
 
@@ -110,7 +115,7 @@ class _OnBoardingState extends State<OnBoarding> {
                child: TextButton(
                  onPressed: () {
                    Navigator.push(context,
-                       MaterialPageRoute(builder: (context)=> HomePage()));
+                       MaterialPageRoute(builder: (context)=> const HomePage()));
                  },
 
                  style: ButtonStyle(
@@ -168,7 +173,7 @@ class _OnBoardingState extends State<OnBoarding> {
                       color: Colors.white,
                       splashColor: Colors.black,
                       style: ButtonStyle(
-                      iconColor: const MaterialStatePropertyAll<Color>(Colors.white),
+                      iconColor: const MaterialStatePropertyAll<Color>(Colors.black),
                       backgroundColor: const MaterialStatePropertyAll<Color>(Color(0xFFFFBB46)),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         RoundedRectangleBorder(
