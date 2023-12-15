@@ -1,39 +1,38 @@
-
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 
+import 'Result.dart';
+
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
 
   bool textScanning = false;
-  String scannedText = "";
-
+  String scannedText="";
   void getImage(ImageSource source) async {
     try {
       final pickedImage = await ImagePicker().pickImage(source: source);
       if(pickedImage != null) {
         textScanning = true;
 
-        final croppedImage=await ImageCropper().cropImage(sourcePath: pickedImage.path,cropStyle: CropStyle.rectangle,
+        CroppedFile? croppedImage=await ImageCropper().cropImage(sourcePath: pickedImage.path,cropStyle: CropStyle.rectangle,
             uiSettings: [IOSUiSettings(),AndroidUiSettings()]);
-
 
         getRecognisedText(XFile(croppedImage!.path));
       }
     } catch (e) {
-      scannedText = "Erromr occurred while scanning";
+      scannedText = "Error occurred while scanning";
       setState(() {});
     }
   }
-
   void getRecognisedText(XFile image) async {
     final inputImage = InputImage.fromFilePath(image.path);
     final textDetector = GoogleMlKit.vision.textRecognizer();
@@ -47,8 +46,6 @@ class _HomePageState extends State<HomePage> {
     }
     setState(() {});
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.transparent,
                       border: Border.all(
-                        color: Colors.orangeAccent
+                        color: Colors.deepPurpleAccent
                       )
 
                     ),
@@ -82,14 +79,39 @@ class _HomePageState extends State<HomePage> {
                     width: double.infinity,
                     child: SingleChildScrollView(child: Text(scannedText)),
                   ),
+                  const SizedBox(height: 20,),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Result(scannedText: scannedText,)));
+                    },
+                    style: TextButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                        ),
+                      side: BorderSide(color: Colors.deepPurpleAccent)
+                    ),
+                    child: const Text(" Find Out! ", style: TextStyle(color: Colors.black,
+                        fontFamily: 'Quicksand',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),),
+
+                  ),
+
                 ],
-              ):const Text("Scan Now!", style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 30,
-                fontFamily: "Quicksand",),),
-              const SizedBox(height: 60,),
-              const Icon(Icons.qr_code_scanner_rounded, size: 200,
-                color: Colors.orangeAccent,),
+              ):const Column(
+                children: [
+                  Text("Scan Now!", style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 30,
+                    fontFamily: "Quicksand",),),
+                  SizedBox(height: 60,),
+                  Icon(Icons.qr_code_scanner_rounded, size: 200,
+                    color: Colors.orangeAccent,),
+                ],
+              ),
+
+
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -110,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 20),),
 
                   ),
-                  const SizedBox(width: 10,),
+                  const SizedBox(width: 15,),
                   IconButton(
                     padding: const EdgeInsets.all(12),
                     onPressed: (){
@@ -121,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                       backgroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(17))),
                     ),
-                    color: Colors.orangeAccent,
+                    color: Colors.deepPurpleAccent,
                     icon: const Icon(Icons.image),
                   ),
                 ],
@@ -132,6 +154,7 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: const Color(0xFFFFF7E0),
           elevation: 0,
+          scrolledUnderElevation: 0,
         ),
       ),
     );
