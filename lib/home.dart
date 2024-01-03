@@ -5,17 +5,19 @@ import 'package:google_ml_kit/google_ml_kit.dart';
 
 import 'Result.dart';
 
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
 
   bool textScanning = false;
-  String scannedText = "";
+  String scannedText="";
+  String get scannedTextValue => scannedText;
 
   void getImage(ImageSource source) async {
     try {
@@ -30,20 +32,18 @@ class _HomePageState extends State<HomePage> {
       }
     } catch (e) {
       scannedText = "Error occurred while scanning";
-      setState(() {});
+      setState(() {
+        scannedText=scannedText;
+      });
     }
   }
   void getRecognisedText(XFile image) async {
     final inputImage = InputImage.fromFilePath(image.path);
     final textDetector = GoogleMlKit.vision.textRecognizer();
     RecognizedText recognisedText = await textDetector.processImage(inputImage);
+    // print(recognisedText.text);
     await textDetector.close();
-    scannedText ="";
-    for (TextBlock block in recognisedText.blocks) {
-      for (TextLine line in block.lines) {
-        scannedText = "$scannedText${line.text}\n";
-      }
-    }
+    scannedText=recognisedText.text.replaceAll("\n", " ");
     setState(() {});
   }
 
@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 20,),
                   TextButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Result()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Result(scannedText: scannedText,)));
                     },
                     style: TextButton.styleFrom(
                         backgroundColor: Colors.white,

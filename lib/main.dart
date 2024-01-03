@@ -115,7 +115,7 @@ class _OnBoardingState extends State<OnBoarding> {
                child: TextButton(
                  onPressed: () {
                    Navigator.push(context,
-                       MaterialPageRoute(builder: (context)=> const HomePage()));
+                       MaterialPageRoute(builder: (context)=> HomePage()));
                  },
 
                  style: ButtonStyle(
