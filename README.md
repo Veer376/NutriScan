@@ -1,6 +1,6 @@
 # nutriscan
 
-This is application is creataed with a intention to build something which can scan the ingredients of the food products.
+Nutri Scan is a flutter based application, made to scan the ingredients on the food. NutriScan can tell you how healhty the food is by giving you the food score for that project... Eat Healhty :'::
 
 ## Getting Started
 
