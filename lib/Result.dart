@@ -9,7 +9,7 @@ import 'home.dart';
 
 class Result extends StatefulWidget {
   final String scannedText;
- const Result({super.key,required this.scannedText});
+const Result({super.key,required this.scannedText});
 
   @override
   State<Result> createState() => _ResultState();
@@ -17,12 +17,12 @@ class Result extends StatefulWidget {
 
 class _ResultState extends State<Result> {
   final reference = FirebaseDatabase.instance.ref('Sheet1');
-  List<String> ingredients=["Corn Grits","Sugar","Iodized Salt","Malt Extract", "Soy Lecithin", "Vitamins & Minerals Prefix", "Probiotics","Rosemary Extract"];
-  List<String> Extractedingredients=[];
+  double foodScore=0;
 
   @override
   Widget build(BuildContext context) {
 
+    // print(widget.scannedText);
     return Scaffold(
       backgroundColor: const Color(0xFFFFF7E0),
        appBar: AppBar(
@@ -33,94 +33,137 @@ class _ResultState extends State<Result> {
          backgroundColor: Colors.transparent,
        ),
        body: Column(
-
-        children: [
-          const SizedBox(height: 50,),
-          // Expanded(
-          //   child: FirebaseAnimatedList(
-          //     query: reference,
-          //     itemBuilder: (context,snapshot,animation,index) {
-          //       final value=snapshot.child('Ingredients').value.toString().toLowerCase();
-          //
-          //       return ingredients.contains(value) ?ListTile(
-          //
-          //         leading: Text(index.toString()),
-          //         title: Text(snapshot.child('Ingredients').value.toString()),
-          //         subtitle: Column(
-          //           children: [
-          //             Text(snapshot.child('Source Type').value.toString(),style: const TextStyle(color: Colors.orangeAccent),),
-          //             Text("Healthy: ${snapshot.child('Healthy').value.toString()}",style: const TextStyle(color: Colors.redAccent),),
-          //             Text("Unhealhty: ${snapshot.child('Unhealthy').value.toString()}",style: const TextStyle(color: Colors.green),)
-          //           ],
-          //         ),
-          //       ):const Text("",style: TextStyle(fontSize: 0),);
-          //     },),
-          // )
-          Column(
             children: [
+              const SizedBox(height: 20,),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                height: 250,
+                margin: const EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    border: Border.all(
+                        color: Colors.deepPurpleAccent)
+                ),
+                child: Text("${widget.scannedText}",style: const TextStyle(fontSize: 15),),
+              ),
+              const SizedBox(height: 10,),
+              Container(
+                height: 500,
                 width: 400,
                 decoration: BoxDecoration(
-                  color: Colors.black12,
+                  // color: Colors.black12,
                   borderRadius: BorderRadius.circular(25),
-
-
                 ),
-                child: Text("ingredients"),
+                child:  FirebaseAnimatedList(
+                  physics: const BouncingScrollPhysics(),
+                  query: reference,
+                  itemBuilder: (context,snapshot,animation,index) {
+                    final value=snapshot.child('Ingredients').value.toString().toLowerCase();
+
+
+                    if(widget.scannedText.toLowerCase().contains(value) ) {
+                      double percentage=0;
+                      int index = widget.scannedText.toLowerCase().indexOf(value);
+                      try{
+                        if (index != -1) {
+                          int startIndex = index + value.length;
+                          int endIndex = startIndex + 5;
+
+                          if (endIndex <= widget.scannedText.length) {
+                            String extractedText = widget.scannedText
+                                .substring(startIndex, endIndex);
+                            extractedText =
+                                extractedText.replaceAll("(", "");
+                            extractedText =
+                                extractedText.replaceAll(")", "");
+                            extractedText =
+                                extractedText.replaceAll("%", "");
+                            percentage = double.parse(extractedText);
+                            // print("Substring found at index $index");
+                            // print("Extracted text: $extractedText");
+
+                          }
+                        }
+                      } catch(exception) { }
+                      print((double.parse(snapshot.child('Label').value!.toString())));
+                      percentage!=0 ? foodScore=foodScore+percentage*(double.parse(snapshot.child('Label').value!.toString()))//ingredients to check
+                                    : foodScore=foodScore+5*(double.parse(snapshot.child('Label').value!.toString()));
+
+                      print(foodScore);
+
+                       return Padding(
+                         padding: const EdgeInsets.all(5.0),
+                         child: ListTile(
+                          tileColor: Colors.white,
+                          shape: const StadiumBorder(),
+                          leading: Text(index.toString()),
+                          title: percentage!=0?Text("${snapshot.child('Ingredients').value.toString()} ($percentage)")
+                                              :Text("${snapshot.child('Ingredients').value.toString()} -"),
+                          subtitle: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              snapshot.child('Source Type').value.toString() == "Natural" ?
+                              /*condition if(Natural) */ Text("Healthy: ${snapshot.child('Healthy').value.toString()}", style: const TextStyle(color: Colors.green),)
+                              /* else */ : Text("Unhealhty: ${snapshot.child('Unhealthy').value.toString()}",
+                                style: const TextStyle(color: Colors.red),)
+                            ],
+                          ),
+                                                   ),
+                       );
+                    } else {
+                      return const Text("",style: TextStyle(fontSize: 0),);
+                    }
+                  },),
               ),
+              const Spacer(),
               Container(
-                height: 300,
-                  width: 300,
-                  child: CircularBarGraph(data)),
-
+                height: 150,
+                  width: 150,
+                  child: CircularBarGraph(foodScore)
+              ),
             ],
-          )
+          ),
 
-
-
-        ],
-      )
     );
   }
 
 }
 class DataPoint {
   final String category;
-  final int value;
+  final double value;
   final charts.Color color;
+
 
   DataPoint(this.category, this.value, this.color);
 }
-List<DataPoint> data = [
-  DataPoint('Category 1', 10, charts.MaterialPalette.blue.shadeDefault),
-  DataPoint('Category 2', 20, charts.MaterialPalette.green.shadeDefault),
-  DataPoint('Category 3', 15, charts.MaterialPalette.red.shadeDefault),
-  // Add more data points as needed
-];
-class CircularBarGraph extends StatelessWidget {
-  final List<DataPoint> data;
 
-  CircularBarGraph(this.data);
+class CircularBarGraph extends StatelessWidget {
+  final double foodScore;
+
+  CircularBarGraph(this.foodScore);
 
   @override
   Widget build(BuildContext context) {
+    print("$foodScore this is inside the chart");
     return charts.PieChart(
       _createSeriesList(),
       animate: true,
-      animationDuration: Duration(milliseconds: 500),
+      animationDuration: const Duration(milliseconds: 500),
     );
   }
 
   List<charts.Series<DataPoint, String>> _createSeriesList() {
-    return [
-      charts.Series<DataPoint, String>(
-        id: 'data',
-        domainFn: (DataPoint dataPoint, _) => dataPoint.category,
-        measureFn: (DataPoint dataPoint, _) => dataPoint.value,
-        colorFn: (DataPoint dataPoint, _) => dataPoint.color,
-        data: data,
+     final List<DataPoint> chartData = [
+          DataPoint('Food Score', foodScore, charts.Color.fromHex(code: '#00C853')), // Green color for foodScore
+          DataPoint('Remaining', (100 - foodScore), charts.Color.fromHex(code: '#FF5722')), // Red color for remaining
+     ];
+      return [
+         charts.Series<DataPoint, String>(
+           id: 'data',
+           domainFn: (DataPoint dataPoint, _) => dataPoint.category,
+           measureFn: (DataPoint dataPoint, _) => dataPoint.value,
+           colorFn: (DataPoint dataPoint, _) => dataPoint.color,
+           data: chartData,
       ),
     ];
   }
