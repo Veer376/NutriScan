@@ -1,8 +1,8 @@
-# nutriscan
+#master
 
-Nutri Scan is a flutter based application, made to scan the ingredients on the food. NutriScan can tell you how healhty the food is by giving you the food score for that project... Eat Healhty :'::
-
-Uses firebase realtime database to scan the ingredients, and read the specific parameters of the ingredients of the food.
+In master branch, Gemini has been used to get the data of ingredients instead of predefined data on firebase realtime database.
+Gemini has advantage over firebase that NutriScan will be able to scan the every single listed ingredients on the product.
+Checkout the .\lib\Gemini_result.dart
 
 ## Getting Started
 
