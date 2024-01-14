@@ -15,7 +15,7 @@ class _IngredientSafetyCheckerState extends State<IngredientSafetyChecker> {
   String result = '';
 
   Future<void> checkIngredientSafety() async {
-    const apiKey = "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";
+    const apiKey = "enter yours";
     const endpoint = "https://api.openai.com/v1/chat/completions";
 
     final response = await http.post(
